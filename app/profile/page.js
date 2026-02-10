@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 
 function Profile() {
  const router = useRouter();
- const [saved, setSaved] = useState(false);
-  const [formData, setFormData] = useState({
+ const [showSaved, setShowSaved] = useState(false);
+  const [profile, setProfile] = useState({
    name: '',
    age: '',
    jobRole: '',
@@ -17,29 +17,25 @@ function Profile() {
   });
 
  useEffect(() => {
-   const data = localStorage.getItem('placementProfile');
-   if (data) {
-     try {
-       setFormData(JSON.parse(data));
-     } catch (err) {
-       console.error('Failed to load profile:', err);
-     }
+   const savedProfile = localStorage.getItem('placementProfile');
+   if (savedProfile) {
+     setProfile(JSON.parse(savedProfile));
    }
  }, []);
 
- const updateField = (e) => {
-   setFormData({...formData, [e.target.name]: e.target.value});
+ const handleChange = (e) => {
+   setProfile({...profile, [e.target.name]: e.target.value});
  };
 
- const saveProfile = (e) => {
+ const handleSave = (e) => {
   e.preventDefault();
-  localStorage.setItem('placementProfile', JSON.stringify(formData));
-  setSaved(true);
-  setTimeout(() => setSaved(false), 3000);
+  localStorage.setItem('placementProfile', JSON.stringify(profile));
+  setShowSaved(true);
+  setTimeout(() => setShowSaved(false), 3000);
  };
 
  const goToAnalysis = () => {
-   localStorage.setItem('placementProfile', JSON.stringify(formData));
+   localStorage.setItem('placementProfile', JSON.stringify(profile));
    router.push('/analysis');
  };
 
@@ -53,42 +49,42 @@ function Profile() {
          <p className="text-center text-[#393E46] mb-6">
            Enter your details to get personalized placement advice
          </p>
-         {saved && (
+         {showSaved && (
            <div className="mb-4 p-3 bg-[#00ADB5] text-[#EEEEEE] rounded-lg text-center">
              ✓ Profile saved successfully!
            </div>
          )}
-         <form onSubmit={saveProfile} className="space-y-4">
+         <form onSubmit={handleSave} className="space-y-4">
            <div>
-             <label className="block text-sm font-medium text-[#222831] mb-1">
+             <div className="text-sm font-medium text-[#222831] mb-1">
                Name <span className="text-[#00ADB5]">*</span>
-             </label>
-             <input type="text" name="name" value={formData.name} onChange={updateField} placeholder="Your full name" required className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white" />
+             </div>
+             <input type="text" name="name" value={profile.name} onChange={handleChange} placeholder="Your full name" required className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white" />
            </div>
            <div>
-            <label className="block text-sm font-medium text-[#222831] mb-1">
+            <div className="text-sm font-medium text-[#222831] mb-1">
               Age <span className="text-[#00ADB5]">*</span>
-            </label>
-            <input type="number" name="age" value={formData.age} onChange={updateField} placeholder="Your age" required className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white" />
+            </div>
+            <input type="number" name="age" value={profile.age} onChange={handleChange} placeholder="Your age" required className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white" />
            </div>
 
            <div>
-             <label className="block text-sm font-medium text-[#222831] mb-1">
+             <div className="text-sm font-medium text-[#222831] mb-1">
                Job Role Trying For <span className="text-[#00ADB5]">*</span>
-             </label>
+             </div>
              <input type="text" name="jobRole"
-               value={formData.jobRole}
-               onChange={updateField}
+               value={profile.jobRole}
+               onChange={handleChange}
                placeholder="e.g., Software Developer, Data Analyst" required
                className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white"
              />
            </div>
            <div>
-            <label className="block text-sm font-medium text-[#222831] mb-1">
+            <div className="text-sm font-medium text-[#222831] mb-1">
               Skills <span className="text-[#00ADB5]">*</span>
-            </label>
-            <textarea name="skills" value={formData.skills}
-              onChange={updateField}
+            </div>
+            <textarea name="skills" value={profile.skills}
+              onChange={handleChange}
               placeholder="e.g., Python, JavaScript, React, Problem Solving"
               required rows="3"
               className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none resize-none bg-white"
@@ -96,35 +92,35 @@ function Profile() {
            </div>
 
            <div>
-            <label className="block text-sm font-medium text-[#222831] mb-1">
+            <div className="text-sm font-medium text-[#222831] mb-1">
               Languages Known <span className="text-[#00ADB5]">*</span>
-            </label>
+            </div>
             <input type="text"
               name="languages"
-              value={formData.languages}
-              onChange={updateField}
+              value={profile.languages}
+              onChange={handleChange}
               placeholder="e.g., English, Hindi, Spanish" required
               className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none bg-white"
             />
            </div>
            <div>
-             <label className="block text-sm font-medium text-[#222831] mb-1">
+             <div className="text-sm font-medium text-[#222831] mb-1">
                Experience <span className="text-[#00ADB5]">*</span>
-             </label>
+             </div>
              <textarea name="experience"
-               value={formData.experience}
-               onChange={updateField} placeholder="Describe your work experience, internships, or academic projects"
+               value={profile.experience}
+               onChange={handleChange} placeholder="Describe your work experience, internships, or academic projects"
                required rows="3"
                className="w-full px-4 py-2 border border-[#393E46] rounded-lg focus:ring-2 focus:ring-[#00ADB5] focus:border-transparent outline-none resize-none bg-white"
              />
            </div>
 
            <div>
-            <label className="block text-sm font-medium text-[#222831] mb-1">
+            <div className="text-sm font-medium text-[#222831] mb-1">
               Projects <span className="text-[#00ADB5]">*</span>
-            </label>
+            </div>
             <textarea name="projects"
-              value={formData.projects} onChange={updateField}
+              value={profile.projects} onChange={handleChange}
               placeholder="Describe your key projects and achievements"
               required
               rows="3"
