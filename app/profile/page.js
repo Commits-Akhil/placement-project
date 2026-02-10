@@ -135,6 +135,9 @@ function Profile() {
             <button type="submit" className="flex-1 bg-[#00ADB5] text-[#EEEEEE] py-3 rounded-lg font-semibold hover:bg-[#393E46] transition-colors">
               Save Profile
             </button>
+            <button type="button" onClick={() => router.push('/quiz')} className="flex-1 bg-[#00ADB5] text-[#EEEEEE] py-3 rounded-lg font-semibold hover:bg-[#393E46] transition-colors">
+              Take Quiz
+            </button>
             <button type="button" onClick={goToAnalysis} className="flex-1 bg-[#222831] text-[#EEEEEE] py-3 rounded-lg font-semibold hover:bg-[#393E46] transition-colors">
               Get Analysis →
             </button>

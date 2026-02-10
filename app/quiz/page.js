@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import QuestionCard from "../components/questioncard";
 import { useQuizStore } from "../store/quizestore";
 
 export default function Home() {
+  const router = useRouter();
   const [started, setStarted] = useState(false);
   const [aiFeedback, setAiFeedback] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5]">
-      <div className=" p-6 w-[420px]">
+      <div className=" p-6 w-[600px]">
         {!started ? (
           <>
             <h2 className="text-2xl font-bold mb-2 text-white text-center">
@@ -105,22 +107,26 @@ export default function Home() {
 
             {aiFeedback && (
               <div>
-                <div className="mt-6 bg-white rounded-xl shadow-lg p-5 text-left">
-                  <p className="mt-3 text-sm mb-6 text-black">
+                <div className="mt-6 bg-white rounded-xl shadow-lg p-8 text-left">
+                  <p className="mt-3 text-base mb-6 text-black">
                     {score / questions.length >= 0.6
-                      ? "Nice work! Here’s how you can improve further 👏"
-                      : "Don’t worry — learning is a process. Here’s some guidance 💡"}
+                      ? "Nice work! Here's how you can improve further 👏"
+                      : "Don't worry — learning is a process. Here's some guidance 💡"}
                   </p>
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-xl">🤖</span>
-                    <h3 className="font-semibold text-black text-lg">AI Coach Feedback</h3>
+                    <span className="text-2xl">🤖</span>
+                    <h3 className="font-semibold text-black text-xl">AI Coach Feedback</h3>
                   </div>
 
-                  <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+                  <div className="text-base text-gray-700 leading-relaxed whitespace-pre-line">
                     {aiFeedback}
                   </div>
-                </div>
-              </div>
+                </div>                <button
+                  onClick={() => router.push('/profile')}
+                  className="w-full mt-4 bg-[#00ADB5] text-white p-3 rounded-lg font-semibold hover:bg-[#222831] transition-colors"
+                >
+                  Go to Profile →
+                </button>              </div>
             )}
           </div>
         )}
