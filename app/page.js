@@ -1,6 +1,8 @@
-import Link from 'next/link';
+'use client';
+import { useRouter } from 'next/navigation';
 
 function Home() {
+ const router = useRouter();
  const bgStyle = "min-h-screen bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5] flex items-center justify-center p-4";
   return (
    <div className={bgStyle}>
@@ -12,12 +14,12 @@ function Home() {
          Get personalized advice powered by Gemini AI
         </p>
        <div className="space-x-4">
-         <Link href="/profile" className="inline-block bg-[#EEEEEE] text-[#222831] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#00ADB5] hover:text-[#EEEEEE] transition-colors">
+         <button onClick={() => router.push('/profile')} className="inline-block bg-[#EEEEEE] text-[#222831] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#00ADB5] hover:text-[#EEEEEE] transition-colors">
            Enter Profile
-         </Link>
-         <Link href="/analysis" className="inline-block bg-[#393E46] text-[#EEEEEE] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#222831] transition-colors">
+         </button>
+         <button onClick={() => router.push('/analysis')} className="inline-block bg-[#393E46] text-[#EEEEEE] px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#222831] transition-colors">
            View Analysis
-         </Link>
+         </button>
        </div>
      </div>
    </div>
