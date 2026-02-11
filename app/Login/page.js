@@ -43,7 +43,9 @@ export default function Login() {
             onClick={async () => {
               try {
                 await loginComponent(email, password);
-                router.push("/");
+                localStorage.setItem('isAuthenticated', 'true');
+                window.dispatchEvent(new Event('storage'));
+                router.push("/profile");
               } catch (exception) {
                 console.log("error");
               }
