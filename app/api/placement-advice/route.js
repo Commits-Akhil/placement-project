@@ -5,6 +5,7 @@ export async function POST(request) {
     const body = await request.json();
     const { name, age, jobRole, skills, languages, experience, projects } = body;
 
+    // Using GEMINI_API_KEY (Key 1) for placement advice
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {

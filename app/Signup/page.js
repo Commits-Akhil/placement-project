@@ -1,12 +1,46 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { registerComponent } from "./core/authLogic";
+import { registerComponent } from "../core/authLogic";
 
 export default function Login() {
   const router = useRouter();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleRegister = async () => {
+    setError("");
+    
+    // Validation
+    if (!email || !password || !confirmPassword) {
+      setError("Please fill in all fields");
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      await registerComponent(email, password);
+      await router.push("/Login");
+    } catch (err) {
+      console.error("Registration error:", err);
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -30,6 +64,7 @@ export default function Login() {
               type="email"
               className="bg-sky-200 h-10 md:w-120  border-0 rounded-lg font-[Marcellus] text-gray-950 px-10"
               placeholder="Email"
+              value={email}
               onChange={(event) => setemail(event.target.value)}
             />
 
@@ -37,26 +72,29 @@ export default function Login() {
               type="password"
               className="bg-sky-200 h-10 md:w-120  border-0 rounded-lg font-[Marcellus] text-gray-950 px-10"
               placeholder="Password*"
+              value={password}
               onChange={(event) => setpassword(event.target.value)}
             />
             <input
               type="password"
               className="bg-sky-200 h-10 md:w-120  border-0 rounded-lg font-[Marcellus] text-gray-950 px-10"
               placeholder="Confirm Password*"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
             />
 
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm">
+                {error}
+              </div>
+            )}
+
             <button
-              className="bg-green-700 h-10 md:w-120  p-2 border-0 rounded-lg w-full text-white"
-              onClick={async (event) => {
-                try {
-                  await registerComponent(email, password);
-                  await router.push("/Login");
-                } catch {
-                  console.log("/error");
-                }
-              }}
+              className="bg-green-700 h-10 md:w-120  p-2 border-0 rounded-lg w-full text-white disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleRegister}
+              disabled={loading}
             >
-              REGISTER
+              {loading ? "REGISTERING..." : "REGISTER"}
             </button>
 
             <div className="font-[Marcellus] text-2xl font-semibold text-black md:ml-36 dark:text-white">
@@ -85,7 +123,7 @@ export default function Login() {
             </div>
             <div className="text-center font-[Marcellus]">
               <span className="text-gray-400"> Already have an account?</span>{" "}
-              <span className="text-red-600">
+              <span className="text-red-600 cursor-pointer">
                 <u onClick={() => router.push("/Login")}>Login Now</u>
               </span>
             </div>

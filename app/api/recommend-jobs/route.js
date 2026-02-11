@@ -1,9 +1,25 @@
 import { analyzeJobs } from "../../lib/gemini";
 
+// Counter to alternate between API keys
+let requestCount = 0;
 
 export async function POST() {
   try {
     console.log("API HIT: recommend-jobs");
+
+    // Alternate between two API keys for load balancing
+    const apiKey1 = process.env.GEMINI_API_KEY_1;
+    const apiKey2 = process.env.GEMINI_API_KEY_2;
+    
+    if (!apiKey1 || !apiKey2) {
+      throw new Error("Both API keys must be configured");
+    }
+    
+    // Use key 1 for even requests, key 2 for odd requests
+    const selectedKey = (requestCount % 2 === 0) ? apiKey1 : apiKey2;
+    requestCount++;
+    
+    console.log(`Using API key ${requestCount % 2 === 0 ? '2' : '1'} for this request`);
 
     const studentProfile = {
       skills: ["React", "JavaScript", "Firebase"],
@@ -43,7 +59,7 @@ FORMAT:
 ]
 `;
 
-    const jobs = await analyzeJobs(prompt);
+    const jobs = await analyzeJobs(prompt, selectedKey);
 
     console.log("AI JOBS:", jobs);
 

@@ -9,9 +9,20 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [aiFeedback, setAiFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { questions, score, answers, isSubmitted, setQuestions } =
     useQuizStore();
+
+  useEffect(() => {
+    // Check authentication
+    const isAuth = localStorage.getItem('isAuthenticated');
+    if (!isAuth || isAuth !== 'true') {
+      router.push('/Login');
+      return;
+    }
+    setIsLoading(false);
+  }, [router]);
 
   async function startQuiz() {
     const res = await fetch("/api/quiz");
@@ -51,6 +62,14 @@ export default function Home() {
     const data = await res.json();
     setAiFeedback(data.feedback);
     setLoading(false);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5]">
+        <div className="text-[#EEEEEE] text-xl">Loading...</div>
+      </div>
+    );
   }
 
   return (

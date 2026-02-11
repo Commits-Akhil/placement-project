@@ -1,13 +1,15 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-export async function analyzeJobs(prompt) {
+export async function analyzeJobs(prompt, apiKey = null) {
   console.log("Gemini function called");
 
-  if (!process.env.GEMINI_API_KEY) {
+  const key = apiKey || process.env.GEMINI_API_KEY;
+  
+  if (!key) {
     throw new Error("GEMINI_API_KEY is missing");
   }
 
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  const genAI = new GoogleGenerativeAI(key);
 
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.5-flash'

@@ -9,15 +9,24 @@ function Analysis() {
  const [result, setResult] = useState('');
  const [waiting, setWaiting] = useState(false);
  const [error, setError] = useState('');
+ const [isLoading, setIsLoading] = useState(true);
 
  useEffect(() => {
+   // Check authentication
+   const isAuth = localStorage.getItem('isAuthenticated');
+   if (!isAuth || isAuth !== 'true') {
+     router.push('/Login');
+     return;
+   }
+   setIsLoading(false);
+   
    const savedProfile = localStorage.getItem('placementProfile');
    if (savedProfile) {
      setProfile(JSON.parse(savedProfile));
    } else {
      setError('No profile data found. Please fill your profile first.');
    }
- }, []);
+ }, [router]);
 
  const getAdvice = async () => {
    if (!profile) return;
@@ -49,7 +58,15 @@ function Analysis() {
    }
  }, [profile]);
 
- if (!profile && !error) {
+ if (!profile && !error && !isLoading) {
+   return (
+     <div className="min-h-screen bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5] flex items-center justify-center p-4">
+       <div className="text-[#EEEEEE] text-xl">Loading...</div>
+     </div>
+   );
+ }
+
+ if (isLoading) {
    return (
      <div className="min-h-screen bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5] flex items-center justify-center p-4">
        <div className="text-[#EEEEEE] text-xl">Loading...</div>

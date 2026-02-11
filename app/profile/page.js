@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 function Profile() {
  const router = useRouter();
  const [showSaved, setShowSaved] = useState(false);
+ const [isLoading, setIsLoading] = useState(true);
   const [profile, setProfile] = useState({
    name: '',
    age: '',
@@ -17,11 +18,27 @@ function Profile() {
   });
 
  useEffect(() => {
+   // Check authentication
+   const isAuth = localStorage.getItem('isAuthenticated');
+   if (!isAuth || isAuth !== 'true') {
+     router.push('/Login');
+     return;
+   }
+   setIsLoading(false);
+   
    const savedProfile = localStorage.getItem('placementProfile');
    if (savedProfile) {
      setProfile(JSON.parse(savedProfile));
    }
- }, []);
+ }, [router]);
+
+ if (isLoading) {
+   return (
+     <div className="min-h-screen bg-gradient-to-br from-[#222831] via-[#393E46] to-[#00ADB5] flex items-center justify-center">
+       <div className="text-[#EEEEEE] text-xl">Loading...</div>
+     </div>
+   );
+ }
 
  const handleChange = (e) => {
    setProfile({...profile, [e.target.name]: e.target.value});

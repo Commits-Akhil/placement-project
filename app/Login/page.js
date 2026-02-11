@@ -45,7 +45,10 @@ export default function Login() {
               onClick={async (event) => {
                 try {
                   await loginComponent(email, password);
-                  await router.push("/");
+                  localStorage.setItem('isAuthenticated', 'true');
+                  // Trigger storage event for navbar update
+                  window.dispatchEvent(new Event('storage'));
+                  await router.push("/profile");
                 } catch (exception) {
                   console.log("error");
                 }
@@ -80,8 +83,8 @@ export default function Login() {
             </div>
             <div className="text-center font-[Marcellus]">
               <span className="text-gray-400"> Don't have any account?</span>{" "}
-              <span className="text-red-600">
-                <u onClick={() => router.push("/")}>Register Now</u>
+              <span className="text-red-600 cursor-pointer">
+                <u onClick={() => router.push("/Signup")}>Register Now</u>
               </span>
             </div>
           </div>

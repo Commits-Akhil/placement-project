@@ -26,7 +26,15 @@ export async function POST(req) {
     "Limit the response to 200 words.";
 
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY_3;
+  
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "API key 3 not configured" },
+      { status: 500 }
+    );
+  }
+  
   const model = "gemini-2.5-flash";
 
   const response = await fetch(
